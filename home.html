@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقعي الشخصي | مبرمج محترف</title>
+    <style>
+    .calculator {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin: 20px 0;
+    border: 1px solid #ddd;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+.result {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #e8f4fc;
+    border-radius: 4px;
+    border-right: 4px solid #3498db;
+}
+        /* CSS الأساسي يبقى كما هو */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+        
+        body.night-mode {
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            transition: all 0.3s ease;
+            transform: translateX(-100%);
+            position: fixed;
+            height: 100%;
+            z-index: 100;
+            top: 0;
+            left: 0;
+        }
+        
+        .sidebar.active {
+            transform: translateX(0);
+        }
+        
+        .sidebar h3 {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 10px;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+        }
+        
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+        
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 5px;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        
+        .sidebar ul li a:hover {
+            background-color: #34495e;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            transition: margin 0.3s;
+        }
+        
+        /* تعديلات زر القائمة */
+        .menu-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            z-index: 90;
+            width: 30px;
+            height: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 0;
+        }
+        
+        .menu-toggle span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: #2c3e50;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+        
+        body.night-mode .menu-toggle span {
+            background-color: #f0f0f0;
+        }
+        
+        .menu-toggle.active span:nth-child(1) {
+            transform: translateY(10px) rotate(45deg);
+        }
+        
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .menu-toggle.active span:nth-child(3) {
+            transform: translateY(-10px) rotate(-45deg);
+        }
+        
+        /* أنماط الصفحات */
+        .page {
+            display: none;
+        }
+        
+        .page.active {
+            display: block;
+        }
+        
+        /* أنماط الصور التوضيحية */
+        .content-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 15px 0;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        
+        .img-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .img-caption {
+            font-style: italic;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        body.night-mode .img-caption {
+            color: #aaa;
+        }
+        
+        /* بقية التنسيقات تبقى كما هي */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 8px;
+        }
+        
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid white;
+            margin-bottom: 15px;
+        }
+        
+        .greeting {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        
+        section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        body.night-mode section {
+            background-color: #2d2d2d;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        h2 {
+            color: #3498db;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+        }
+        
+        body.night-mode h2 {
+            color: #5dade2;
+            border-bottom-color: #5dade2;
+        }
+        
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .project {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .project:hover {
+            transform: translateY(-5px);
+        }
+        
+        body.night-mode .project {
+            background-color: #333;
+            border-left-color: #5dade2;
+        }
+        
+        .project h3 {
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+        
+        body.night-mode .project h3 {
+            color: #5dade2;
+        }
+        
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .service {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border-top: 3px solid #3498db;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .service:hover {
+            transform: translateY(-5px);
+        }
+        
+        body.night-mode .service {
+            background-color: #333;
+            border-top-color: #5dade2;
+        }
+        
+        .service i {
+            font-size: 30px;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        body.night-mode .service i {
+            color: #5dade2;
+        }
+        
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .contact-item i {
+            color: #3498db;
+            font-size: 20px;
+        }
+        
+        body.night-mode .contact-item i {
+            color: #5dade2;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 8px;
+        }
+        
+        body.night-mode footer {
+            background-color: #2c3e50;
+        }
+        
+        @media (max-width: 768px) {
+            .projects, .services {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- زر القائمة المعدل -->
+    <button class="menu-toggle" onclick="toggleSidebar()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+    
+    <div class="sidebar" id="sidebar">
+        <h3>إرشادات الموقع</h3>
+        <ul>
+            <li><a href="#" onclick="showPage('home')"><i class="fas fa-home"></i> الصفحة الرئيسية</a></li>
+            <li><a href="#" onclick="showPage('about')"><i class="fas fa-user"></i> نبذة عني</a></li>
+            <li><a href="#" onclick="showPage('projects')"><i class="fas fa-code"></i> أعمالي</a></li>
+            <li><a href="#" onclick="showPage('services')"><i class="fas fa-cogs"></i> الخدمات</a></li>
+            <li><a href="#" onclick="showPage('contact')"><i class="fas fa-envelope"></i> تواصل معي</a></li>
+            <li><a href="#" onclick="toggleNightMode()"><i class="fas fa-moon"></i> تغيير الوضع</a></li>
+        </ul>
+    </div>
+    
+    <div class="main-content">
+        <!-- الصفحة الرئيسية -->
+        <div class="page active" id="home-page">
+            <header>
+                <img src="zng.jpg" alt="صورة المبرمج" class="profile-img">
+                <div class="greeting" id="greeting"></div>
+                <h1>مرحباً بكم في موقعي الشخصي</h1>
+                <p>طالب تقنية معلومات | مبرمج محترف</p>
+            </header>
+            
+            <section>
+                <h2><i class="fas fa-star"></i> مرحباً بكم</h2>
+                <p>أهلاً وسهلاً بكم في موقعي الشخصي حيث يمكنكم التعرف على مهاراتي وخبراتي في مجال البرمجة وتقنية المعلومات.</p>
+                
+                <div class="img-container">
+                    <img src="https://via.placeholder.com/800x400?text=صورة+ترحيبية" alt="صورة ترحيبية" class="content-img">
+                    <p class="img-caption">أعمالي تتحدث عن نفسها</p>
+                </div>
+                
+                <p>يمكنكم استكشاف الموقع من خلال القائمة الجانبية للتعرف على خدماتي وأعمالي السابقة.</p>
+            </section>
+        </div>
+        
+        <!-- صفحة نبذة عني -->
+        <div class="page" id="about-page">
+            <header>
+                <h1>نبذة عني</h1>
+            </header>
+            
+            <section>
+                <h2><i class="fas fa-user-graduate"></i> تعليمي</h2>
+                <p>أنا طالب في مجال تقنية المعلومات، أدرس حالياً في جامعة... وأحمل شهادة في... مع معدل تراكمي...</p>
+                
+                <div class="img-container">
+                    <img src="https://via.placeholder.com/800x400?text=صورة+تعليمية" alt="صورة تعليمية" class="content-img">
+                    <p class="img-caption">حياتي الأكاديمية</p>
+                </div>
+            </section>
+            
+            <section>
+                <h2><i class="fas fa-laptop-code"></i> خبراتي البرمجية</h2>
+                <p>أمتلك خبرة قوية في عدة لغات برمجة وأطر عمل منها:</p>
+                <ul>
+                    <li>Python - خبرة 3 سنوات</li>
+                    <li>Java - خبرة سنتين</li>
+                    <li>JavaScript - خبرة سنتين</li>
+                    <li>C++ - خبرة سنة</li>
+                </ul>
+                
+                <div class="img-container">
+                    <img src="https://via.placeholder.com/800x400?text=خبرات+برمجية" alt="خبرات برمجية" class="content-img">
+                    <p class="img-caption">بعض المشاريع التي عملت عليها</p>
+                </div>
+            </section>
+            
+            <section>
+                <h2><i class="fas fa-trophy"></i> إنجازاتي</h2>
+                <p>حصلت على عدة جوائز وتقديرات في مجال البرمجة منها:</p>
+                <ul>
+                    <li>الجائزة الأولى في مسابقة برمجة الجامعة 2022</li>
+                    <li>التقدير الذهبي في مسابقة Hackathon 2021</li>
+                    <li>شهادة تميز من معهد تقنية المعلومات</li>
+                </ul>
+            </section>
+        </div>
+        
+        <!-- صفحة أعمالي -->
+        <div class="page" id="projects-page">
+            <header>
+                <h1>أعمالي ومشاريعي</h1>
+            </header>
+            
+            <section>
+                <h2><i class="fas fa-code"></i> مشاريعي البرمجية</h2>
+                <div class="projects">
+                    <div class="project" onclick="showProjectDetail('cylinder')">
+                        <h3>برنامج حساب حجم الأسطوانة</h3>
+                        <p>برنامج يقوم بحساب حجم الأسطوانة بناءً على نصف القطر والارتفاع المدخلين من قبل المستخدم.</p>
+                        <p><strong>التقنيات المستخدمة:</strong> Python</p>
+                    </div>
+                    <div class="project" onclick="showProjectDetail('circle')">
+                        <h3>برنامج حساب حجم الدائرة</h3>
+                        <p>برنامج لحساب مساحة الدائرة ومحيطها باستخدام نصف القطر المدخل من المستخدم.</p>
+                        <p><strong>التقنيات المستخدمة:</strong> Java</p>
+                    </div>
+                    <div class="project" onclick="showProjectDetail('equation')">
+                        <h3>برنامج حل معادلات الدرجة الثالثة</h3>
+                        <p>برنامج متقدم لحل معادلات الدرجة الثالثة باستخدام طرق رياضية متقدمة.</p>
+                        <p><strong>التقنيات المستخدمة:</strong> C++</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- تفاصيل المشاريع -->
+            <div id="project-details">
+                <!-- تفاصيل برنامج الأسطوانة -->
+                <section class="project-detail" id="cylinder-detail" style="display:none;">
+                    <h2><i class="fas fa-calculator"></i> تفاصيل برنامج حساب حجم الأسطوانة</h2>
+    <!-- أضف هذا الجزء -->
+    <div class="calculator">
+        <h3>جرب البرنامج الآن</h3>
+        <div class="input-group">
+            <label for="radius">نصف القطر (سم):</label>
+            <input type="number" id="radius" step="0.1" min="0">
+        </div>
+        <div class="input-group">
+            <label for="height">الارتفاع (سم):</label>
+            <input type="number" id="height" step="0.1" min="0">
+        </div>
+        <button onclick="calculateCylinder()">احسب الحجم</button>
+        <div id="cylinder-result" class="result"></div>
+    </div>
+    <!-- نهاية الجزء المضاف -->
+</section>
+                    <div class="img-container">
+                        <img src="https://via.placeholder.com/800x400?text=صورة+برنامج+الأسطوانة" alt="برنامج الأسطوانة" class="content-img">
+                        <p class="img-caption">واجهة برنامج حساب حجم الأسطوانة</p>
+                    </div>
+                    
+                    <h3>مميزات البرنامج:</h3>
+                    <ul>
+                        <li>واجهة سهلة الاستخدام</li>
+                        <li>إدخال القيم وتحقيقها</li>
+                        <li>عرض النتائج بدقة عالية</li>
+                        <li>إمكانية حفظ الحسابات السابقة</li>
+                    </ul>
+                    
+                    <button onclick="hideProjectDetails()" class="back-btn">العودة إلى قائمة المشاريع</button>
+                </section>
+                
+                <!-- تفاصيل برنامج الدائرة -->
+               <section class="project-detail" id="circle-detail" style="display:none;">
+    <h2><i class="fas fa-circle"></i> تفاصيل برنامج حساب حجم الدائرة</h2>
+    
+    <!-- أضف هذا الجزء -->
+    <div class="calculator">
+        <h3>جرب البرنامج الآن</h3>
+        <div class="input-group">
+            <label for="circle-radius">نصف القطر (سم):</label>
+            <input type="number" id="circle-radius" step="0.1" min="0">
+        </div>
+        <button onclick="calculateCircle()">احسب المساحة والمحيط</button>
+        <div id="circle-result" class="result"></div>
+    </div>
+    <!-- نهاية الجزء المضاف -->
+</section>
+                    
+                    <div class="img-container">
+                        <img src="https://via.placeholder.com/800x400?text=صورة+برنامج+الدائرة" alt="برنامج الدائرة" class="content-img">
+                        <p class="img-caption">واجهة برنامج حساب خصائص الدائرة</p>
+                    </div>
+                    
+                    <h3>مميزات البرنامج:</h3>
+                    <ul>
+                        <li>حساب سريع ودقيق</li>
+                        <li>واجهة رسومية جذابة</li>
+                        <li>إمكانية التحويل بين الوحدات</li>
+                        <li>تخصيص إعدادات البرنامج</li>
+                    </ul>
+                    
+                    <button onclick="hideProjectDetails()" class="back-btn">العودة إلى قائمة المشاريع</button>
+                </section>
+                
+                <!-- تفاصيل برنامج المعادلات -->
+          <section class="project-detail" id="equation-detail" style="display:none;">
+    <h2><i class="fas fa-square-root-alt"></i> تفاصيل برنامج حل معادلات الدرجة الثالثة</h2>
+    
+    <!-- أضف هذا الجزء -->
+    <div class="calculator">
+        <h3>حل المعادلة: ax³ + bx² + cx + d = 0</h3>
+        <div class="input-group">
+            <label for="a">a (معامل x³):</label>
+            <input type="number" id="a" step="any">
+        </div>
+        <div class="input-group">
+            <label for="b">b (معامل x²):</label>
+            <input type="number" id="b" step="any">
+        </div>
+        <div class="input-group">
+            <label for="c">c (معامل x):</label>
+            <input type="number" id="c" step="any">
+        </div>
+        <div class="input-group">
+            <label for="d">d (الحد الثابت):</label>
+            <input type="number" id="d" step="any">
+        </div>
+        <button onclick="solveEquation()">حل المعادلة</button>
+        <div id="equation-result" class="result"></div>
+    </div>
+    <!-- نهاية الجزء المضاف -->
+</section>
+                    
+                    <div class="img-container">
+                        <img src="https://via.placeholder.com/800x400?text=صورة+برنامج+المعادلات" alt="برنامج المعادلات" class="content-img">
+                        <p class="img-caption">واجهة برنامج حل المعادلات</p>
+                    </div>
+                    
+                    <h3>مميزات البرنامج:</h3>
+                    <ul>
+                        <li>حل جميع أنواع معادلات الدرجة الثالثة</li>
+                        <li>عرض الحلول الحقيقية والتخيلية</li>
+                        <li>رسم بياني للمعادلة</li>
+                        <li>شرح خطوات الحل</li>
+                    </ul>
+                    
+                    <button onclick="hideProjectDetails()" class="back-btn">العودة إلى قائمة المشاريع</button>
+                </section>
+            </div>
+        </div>
+        
+        <!-- صفحة الخدمات -->
+        <div class="page" id="services-page">
+            <header>
+                <h1>الخدمات التي أقدمها</h1>
+            </header>
+            
+            <section>
+                <h2><i class="fas fa-laptop"></i> خدمات التصميم والتطوير</h2>
+                <div class="services">
+                    <div class="service" onclick="showServiceDetail('web-design')">
+                        <i class="fas fa-laptop-code"></i>
+                        <h3>تصميم مواقع</h3>
+                        <p>تصميم مواقع ويب احترافية متجاوبة مع جميع الأجهزة</p>
+                    </div>
+                    <div class="service" onclick="showServiceDetail('problem-solving')">
+                        <i class="fas fa-bug"></i>
+                        <h3>حل المشاكل البرمجية</h3>
+                        <p>تحليل وحل المشكلات البرمجية باحترافية</p>
+                    </div>
+                    <div class="service" onclick="showServiceDetail('system-design')">
+                        <i class="fas fa-server"></i>
+                        <h3>تصميم أنظمة</h3>
+                        <p>تصميم أنظمة برمجية متكاملة حسب الطلب</p>
+                    </div>
+                    <div class="service" onclick="showServiceDetail('system-dev')">
+                        <i class="fas fa-rocket"></i>
+                        <h3>تطوير أنظمة قوية</h3>
+                        <p>تطوير أنظمة قوية وآمنة وقابلة للتوسع</p>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- تفاصيل الخدمات -->
+            <div id="service-details">
+                <!-- تفاصيل تصميم المواقع -->
+                <section class="service-detail" id="web-design-detail" style="display:none;">
+                    <h2><i class="fas fa-laptop-code"></i> خدمة تصميم المواقع</h2>
+                    <p>أقدم خدمات تصميم وتطوير مواقع الويب المتكاملة التي تلبي احتياجات عملك أو مشروعك.</p>
+                    
+                    <div class="img-container">
+                        <img src="https://via.placeholder.com/800x400?text=صورة+تصميم+مواقع" alt="تصميم مواقع" class="content-img">
+                        <p class="img-caption">أمثلة على مواقع قمت بتصميمها</p>
+                    </div>
+                    
+                    <h3>ما أقدمه في هذه الخدمة:</h3>
+                    <ul>
+                        <li>تصميم مواقع متجاوبة تعمل على جميع الأجهزة</li>
+                        <li>واجهات مستخدم جذابة وسهلة الاستخدام</li>
+                        <li>تحسين محركات البحث (SEO)</li>
+                        <li>ربط مع قواعد البيانات وأنظمة الدفع</li>
+                        <li>صيانة وتحديثات دورية</li>
+                    </ul>
+                    
+                    <h3>التقنيات المستخدمة:</h3>
+                    <ul>
+                        <li>HTML5, CSS3, JavaScript</li>
+                        <li>React, Angular, Vue.js</li>
+                        <li>Node.js, PHP, Python</li>
+                        <li>MySQL, MongoDB</li>
+                    </ul>
+                    
+                    <button onclick="hideServiceDetails()" class="back-btn">العودة إلى قائمة الخدمات</button>
+                </section>
+                
+                <!-- تفاصيل حل المشاكل البرمجية -->
+                <section class="service-detail" id="problem-solving-detail" style="display:none;">
+                    <h2><i class="fas fa-bug"></i> خدمة حل المشاكل البرمجية</h2>
+                    <p>حلول برمجية احترافية للمشاكل التقنية التي تواجهها في مشاريعك البرمجية.</p>
+                    
+                    <div class="img-container">
+                        <img src="https://via.placeholder.com/800x400?text=صورة+حل+مشاكل+برمجية" alt="حل مشاكل برمجية" class="content-img">
+                        <p class="img-caption">تحليل وحل المشكلات البرمجية</p>
+                    </div>
+                    
+                    <h3>ما أقدمه في هذه الخدمة:</h3>
+                    <ul>
+                        <li>تحليل الأخطاء البرمجية وإصلاحها</li>
+                        <li>تحسين أداء الكود البرمجي</li>
+                        <li>حل مشاكل التوافق بين الأنظمة</li>
+                        <li>تصحيح مشاكل الأمان والثغرات</li>
+                        <li>تقديم حلول بديلة للمشاكل المعقدة</li>
+                    </ul>
+                    
+                    <h3>مجالات الخبرة:</h3>
+                    <ul>
+                        <li>أخطاء وقت التشغيل والتصريف</li>
+                        <li>مشاكل قواعد البيانات</li>
+                        <li>مشاكل أداء التطبيقات</li>
+                        <li>مشاكل تكامل الأنظمة</li>
+                    </ul>
+                    
+                    <button onclick="hideServiceDetails()" class="back-btn">العودة إلى قائمة الخدمات</button>
+                </section>
+                
+                <!-- بقية تفاصيل الخدمات بنفس النمط -->
+            </div>
+        </div>
+        
+        <!-- صفحة تواصل معي -->
+        <div class="page" id="contact-page">
+            <header>
+                <h1>تواصل معي</h1>
+            </header>
+            
+            <section>
+                <h2><i class="fas fa-envelope"></i> معلومات الاتصال</h2>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <span>0967051832</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <span>Zngola00@gmail.com</span>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>مدينتي، بلدي</span>
+                    </div>
+                </div>
+                
+                <div class="img-container">
+                    <img src="https://via.placeholder.com/800x400?text=خريطة+الموقع" alt="خريطة الموقع" class="content-img">
+                    <p class="img-caption">موقعي الجغرافي</p>
+                </div>
+            </section>
+            
+            <section>
+                <h2><i class="fas fa-paper-plane"></i> أرسل لي رسالة</h2>
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label for="name">الاسم الكامل:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">البريد الإلكتروني:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">الموضوع:</label>
+                        <input type="text" id="subject" name="subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">الرسالة:</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">إرسال الرسالة</button>
+                </form>
+            </section>
+        </div>
+        
+        <footer>
+            <p>&copy; 2023 جميع الحقوق محفوظة | موقعي الشخصي</p>
+        </footer>
+    </div>
+    
+    <script>
+        // تحديد الوضع الليلي أو النهاري حسب الوقت
+       // دالة حساب حجم الأسطوانة
+function calculateCylinder() {
+    const radius = parseFloat(document.getElementById('radius').value);
+    const height = parseFloat(document.getElementById('height').value);
+    const volume = Math.PI * Math.pow(radius, 2) * height;
+    document.getElementById('cylinder-result').innerHTML = `
+        <strong>حجم الأسطوانة:</strong> ${volume.toFixed(2)} سم³
+    `;
+}
+
+// دالة حساب خصائص الدائرة
+function calculateCircle() {
+    const radius = parseFloat(document.getElementById('circle-radius').value);
+    const area = Math.PI * Math.pow(radius, 2);
+    const circumference = 2 * Math.PI * radius;
+    document.getElementById('circle-result').innerHTML = `
+        <strong>المساحة:</strong> ${area.toFixed(2)} سم²<br>
+        <strong>المحيط:</strong> ${circumference.toFixed(2)} سم
+    `;
+}
+
+// دالة حل معادلة الدرجة الثالثة (طريقة نيوتن-رافسون المبسطة)
+function solveEquation() {
+    const a = parseFloat(document.getElementById('a').value);
+    const b = parseFloat(document.getElementById('b').value);
+    const c = parseFloat(document.getElementById('c').value);
+    const d = parseFloat(document.getElementById('d').value);
+    
+    // هذه نسخة مبسطة - يمكن استبدالها بخوارزمية أكثر دقة
+    let roots = [];
+    for (let x = -10; x <= 10; x += 0.5) {
+        const y = a*x*x*x + b*x*x + c*x + d;
+        if (Math.abs(y) < 0.1) { // إذا كانت النتيجة قريبة من الصفر
+            roots.push(x.toFixed(2));
+        }
+    }
+    
+    if (roots.length === 0) {
+        document.getElementById('equation-result').innerHTML = "لا توجد جذور حقيقية في النطاق المدروس";
+    } else {
+        document.getElementById('equation-result').innerHTML = `
+            <strong>الجذور التقريبية:</strong> ${roots.join('، ')}
+        `;
+    }
+}
+        function setInitialMode() {
+            const now = new Date();
+            const hours = now.getHours();
+            
+            // تحديد رسالة الترحيب حسب الوقت
+            const greetingElement = document.getElementById('greeting');
+            if (hours >= 4 && hours < 12) {
+                greetingElement.textContent = 'صباح الخير!';
+            } else if (hours >= 12 && hours < 20) {
+                greetingElement.textContent = 'مساء الخير!';
+            } else {
+                greetingElement.textContent = 'عمت مساءً!';
+            }
+            
+            // تحديد الوضع الليلي أو النهاري حسب الوقت
+            if (hours >= 18 || hours < 6) {
+                document.body.classList.add('night-mode');
+            } else {
+                document.body.classList.remove('night-mode');
+            }
+        }
+        
+        // تبديل القائمة الجانبية
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.querySelector('.menu-toggle').classList.toggle('active');
+        }
+        
+        // تبديل الوضع الليلي/النهاري
+        function toggleNightMode() {
+            document.body.classList.toggle('night-mode');
+        }
+        
+        // عرض الصفحة المحددة
+        function showPage(pageId) {
+            // إخفاء جميع الصفحات
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // إخفاء تفاصيل المشاريع والخدمات إذا كانت ظاهرة
+            hideProjectDetails();
+            hideServiceDetails();
+            
+            // إظهار الصفحة المطلوبة
+            document.getElementById(pageId + '-page').classList.add('active');
+            
+            // إغلاق القائمة الجانبية
+            toggleSidebar();
+        }
+        
+        // عرض تفاصيل المشروع
+        function showProjectDetail(projectId) {
+            document.getElementById('project-details').style.display = 'block';
+            document.querySelectorAll('.project-detail').forEach(detail => {
+                detail.style.display = 'none';
+            });
+            document.getElementById(projectId + '-detail').style.display = 'block';
+            
+            // إخفاء قائمة المشاريع
+            document.querySelectorAll('.projects').forEach(project => {
+                project.style.display = 'none';
+            });
+        }
+        
+        // إخفاء تفاصيل المشروع
+        function hideProjectDetails() {
+            document.getElementById('project-details').style.display = 'none';
+            document.querySelectorAll('.projects').forEach(project => {
+                project.style.display = 'grid';
+            });
+        }
+        
+        // عرض تفاصيل الخدمة
+        function showServiceDetail(serviceId) {
+            document.getElementById('service-details').style.display = 'block';
+            document.querySelectorAll('.service-detail').forEach(detail => {
+                detail.style.display = 'none';
+            });
+            document.getElementById(serviceId + '-detail').style.display = 'block';
+            
+            // إخفاء قائمة الخدمات
+            document.querySelectorAll('.services').forEach(service => {
+                service.style.display = 'none';
+            });
+        }
+        
+        // إخفاء تفاصيل الخدمة
+        function hideServiceDetails() {
+            document.getElementById('service-details').style.display = 'none';
+            document.querySelectorAll('.services').forEach(service => {
+                service.style.display = 'grid';
+            });
+        }
+        
+        // تهيئة الصفحة عند التحميل
+        window.onload = function() {
+            setInitialMode();
+            
+            // إغلاق القائمة الجانبية عند النقر خارجها
+            document.addEventListener('click', function(event) {
+                const sidebar = document.getElementById('sidebar');
+                const menuToggle = document.querySelector('.menu-toggle');
+                
+                if (sidebar.classList.contains('active') && 
+                    !sidebar.contains(event.target) && 
+                    !menuToggle.contains(event.target)) {
+                    sidebar.classList.remove('active');
+                    menuToggle.classList.remove('active');
+                }
+            });
+            
+            // معالجة إرسال نموذج الاتصال
+            document.getElementById('contact-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('شكراً لتواصلك معي، سأرد عليك في أقرب وقت ممكن!');
+                this.reset();
+            });
+        };
+    </script>
+</body>
+</html>
